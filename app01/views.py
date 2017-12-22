@@ -1,6 +1,6 @@
 
 import pymysql
-from django.shortcuts import render,redirect
+from django.shortcuts import render,redirect,HttpResponse
 
 def classes(request):
     conn = pymysql.connect(host='localhost',port=3306,user='kk',passwd='123',db='webdb',charset='utf8')
@@ -57,4 +57,36 @@ def del_class(request):
     course.close()
     conn.close()
     return redirect('/classes/')
+
+from untils import pymysqlhepler
+def students(request):
+    if request.method == "GET":
+        student_list = pymysqlhepler.get_list("select student.id,student.name,class.title from student LEFT JOIN class ON student.class_id = class.id",[])
+        return render(request,'studentmanagent/students.html',{'student_list':student_list})
+
+def add_student(request):
+    if request.method == "GET":
+        class_list = pymysqlhepler.get_list("select id,title from class",[])
+        return render(request,'studentmanagent/add_student.html',{'class_list':class_list})
+    else:
+        nid = request.POST.get('stu_name')
+        title = request.POST.get('cls_sel')
+        print(nid,title)
+        pymysqlhepler.movde_list("insert into student(name,class_id) VALUES (%s,%s)",[nid,title])
+        return redirect('/students/')
+
+def ed_student(request):
+    if request.method == "GET":
+        nid = request.GET.get('nid')
+        stu_name = pymysqlhepler.get_one("select * from student WHERE id=%s",[nid,])
+        class_name = pymysqlhepler.get_list("select id,title from class",[])
+
+        return render(request,'studentmanagent/ed_student.html',{'class_name':class_name,'stu_name':stu_name})
+
+    else:
+        nid = request.GET.get('nid')
+        st_name = request.POST.get('st_n')
+        cls_name = request.POST.get('class_name')
+        pymysqlhepler.movde_list("update student set name=%s, class_id=%s WHERE id=%s",[st_name,cls_name,nid])
+        return redirect('/students/')
 
