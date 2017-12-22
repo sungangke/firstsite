@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>编辑学生</title>
+</head>
+<body>
+<h1>编辑学生</h1>
+<hr>
+<form method="post" action="/ed_student/?nid={{ stu_name.id }}">
+    <p>学生姓名:<input type="text" value="{{ stu_name.name }}" name="st_n"></p>
+    <p>所在班级:
+        <select name="class_name" id="class_name">
+            {{% for foo in class_name %}
+                {{% if foo.id == stu_name.class_id %}
+                    <option selected value="{{ foo.id }}">{{ foo.title }}</option>
+                {% else %}
+                    <option  value="{{ foo.id }}">{{ foo.title }}</option>
+                {% endif %}
+            {% endfor %}
+            
+        </select>
+    </p>
+    <input type="submit" value="提交">
+</form>
+</body>
+</html>
