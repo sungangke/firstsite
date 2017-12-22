@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>userlist</title>
+</head>
+<body>
+<table border="1px">
+    <tr>
+        <th>序号</th>
+        <th>姓名</th>
+        <th>邮箱</th>
+    </tr>
+
+    {% for ff in res2 %}
+        <tr>
+            <td>{{ ff.id }}</td>
+            <td>{{ ff.name }}</td>
+            <td>{{ ff.email }}</td>
+        </tr>
+    {% endfor %}
+
+
+</table>
+</body>
+</html>
