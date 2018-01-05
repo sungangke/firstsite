@@ -3,11 +3,76 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <style>
+        .shadow {
+            position: fixed;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            background-color: black;
+            opacity: 0.5;
+            z-index: 101;
+        }
+
+        .modal {
+            position: fixed;
+            width: 400px;
+            height: 200px;
+            background-color: white;
+            left: 50%;
+            top: 50%;
+            z-index: 102;
+            margin-left: -200px;
+            margin-top: -100px;
+        }
+
+        .hide {
+            display: none;
+        }
+    </style>
 </head>
 <body>
-    <h1>学生列表</h1>
-    <hr>
-    <a href="/add_student/">添加学生</a>
+<h1>学生列表</h1>
+<hr>
+<a href="/add_student/">添加学生</a>
+<a id="dhkstu">对话框添加学生</a>
+<div id="shadow" class="shadow hide"></div>
+<div id="modal" class="modal hide">
+    <p><input type="text" placeholder="学生姓名" id="stu_name"></p>
+    <p>
+        {#            <input type="text" name="cls" placeholder="班级名称" >#}
+        班级名称：
+        <select name="select_cls" id="select_cls">
+            {% for row in class_list %}
+                <option value="{{ row.id }}">{{ row.title }}</option>
+            {% endfor %}
+
+        </select>
+    </p>
+    <input type="button" value="提交" id="tjId">
+    <input type="button" value="取消" id="qxId">
+    <span id="addError" style="color: red;"></span>
+</div>
+<div id="editModal" class="modal hide">
+    <h3>编辑学生</h3>
+    <p><input type="text" placeholder="学生姓名" id="editName">
+        <input type="text" id="editId" style="display:none;">
+    </p>
+    <p>
+        {#            <input type="text" name="cls" placeholder="班级名称" >#}
+        班级名称：
+        <select name="editClassId" id="editClassId">
+            {% for row in class_list %}
+                <option value="{{ row.id }}">{{ row.title }}</option>
+            {% endfor %}
+
+        </select>
+    </p>
+    <input type="button" value="更新" id="edittjId">
+    <input type="button" value="取消" id="editqxId">
+    <span id="editError" style="color: red;"></span>
+</div>
 <table border="1px soild red">
     <thead>
     <tr>
@@ -20,14 +85,88 @@
     <tbody>
     {% for foo in student_list %}
         <tr>
-        <td>{{ foo.id }}</td>
-        <td>{{ foo.name }}</td>
-        <td>{{ foo.title }}</td>
-        <td><a href="/ed_student/?nid={{ foo.id }}">编辑</a>|<a href="">删除</a></td>
+            <td>{{ foo.id }}</td>
+            <td>{{ foo.name }}</td>
+            <td clsId="{{ foo.class_id }}">{{ foo.title }}</td>
+            <td><a href="/ed_student/?nid={{ foo.id }}">编辑</a>|
+                <a class="btn-edit">对话框编辑</a>
+                |<a href="">删除</a></td>
         </tr>
     {% endfor %}
-    
+
     </tbody>
 </table>
+<script src="/static/jquery-3.2.1.min.js"></script>
+<script>
+    $(function () {
+        $('#dhkstu').click(function () {
+            $('.shadow, .modal').removeClass('hide');
+        });
+
+        $('#tjId').click(function () {
+            $.ajax({
+                url: '/modal_add_student/',
+                type: 'POST',
+                data: {'name': $('#stu_name').val(), 'class_id': $('#select_cls').val()},
+                success: function (arg) {
+                    arg = JSON.parse(arg);
+                    if (arg.status) {
+                        location.reload()
+                    } else {
+                        $('#addError').text(arg.message)
+                    }
+                }
+            })
+        });
+
+        $('.btn-edit').click(function () {
+            $('#shadow,#editModal').removeClass('hide');
+            var tds = $(this).parent().prevAll();
+{#            console.log(tds[0],tds[1],tds[2])#}
+            var studentId = $(tds[2]).text();
+            var studentName = $(tds[1]).text();
+            var classId = $(tds[0]).attr('clsId')
+{#            console.log(studentId,studentName,classId)#}
+            $('#editId').val(studentId);
+            $('#editName').val(studentName);
+            $('#editClassId').val(classId)
+        });
+
+        $('#edittjId').click(function () {
+            $.ajax({
+                url:'/modal_edit_student/',
+                type:'POST',
+                data:{'nid':$('#editId').val(),'name':$('#editName').val(),'class_id':$('#editClassId').val()},
+                dataType:'JSON',
+                success:function (arg) {
+                    if(arg.status){
+                        location.reload()
+                    }else {
+                        $('#editError').text(arg.message)
+                    }
+                }
+            })
+        })
+
+
+    })
+
+    {#        $('#qxId').click(function () {#}
+    {#            $('.shadow,.modal').addClass('hide');#}
+    {#        });#}
+    {#        $('#tjId').click(function () {#}
+    {#            var content = $('#stu_name').val();#}
+    {#            $.ajax({#}
+    {#                url:'/modal_add_student/',#}
+    {#                type:'POST',#}
+    {#                data:{'content':content}#}
+    {#                success:function (arg) {#}
+    {#                    console.log(arg)#}
+    {#                }#}
+    {#            })#}
+    {#        })#}
+</script>
+
+
 </body>
 </html>

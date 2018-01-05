@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>classs_list</title>
+<style>
+    .shadow {
+            position: fixed;
+            left: 0;
+            top: 0;
+            right: 0;
+            bottom: 0;
+            background-color: black;
+            opacity: 0.5;
+            z-index: 101;
+        }
+
+    .add-modal {
+            position: fixed;
+            width: 400px;
+            height: 400px;
+            background-color: white;
+            left: 50%;
+            top: 50%;
+            z-index: 102;
+            margin-left: -200px;
+            margin-top: -200px;
+        }
+
+    .hide {
+            display: none;
+        }
+</style>
+</head>
+<body>
+<div id="shadow" class="shadow hide"></div>
+<div id="addModal" class="add-modal hide">
+    <p>老师姓名：<input type="text" name="name" id="addName"></p>
+    <p>
+        <select name="classIds" id="classIds" multiple size="7">
+
+        </select>
+    </p>
+    <input type="submit" value="提交" id="addSubmit">
+</div>
+<h1>老师列表</h1>
+<a id="btnAdd">对话框添加</a>
+<table border="1px">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>老师姓名</th>
+            <th>操作</th>
+        </tr>
+    </thead>
+    <tbody>
+    {% for row in teacher_list %}
+        <tr>
+        <td>{{ row.tid }}</td>
+        <td>{{ row.name }}</td>
+        <td>
+            {% for item in row.titles %}
+                <span style="display: inline-block;border: 1px solid red;padding: 5px;">{{ item }}</span>
+            {% endfor %}
+
+        </td>
+        <td><a>删除</a> |<a href="/edit_teacher/?nid={{ row.tid }}">编辑</a>
+        </td>
+        </tr>
+    {% endfor %}
+
+    </tbody>
+</table>
+<script src="/static/jquery-3.2.1.min.js"></script>
+<script>
+    $(function () {
+        bindAdd();
+        bindAddSubmit();
+    });
+    
+    function bindAdd() {
+      $('#btnAdd').click(function () {
+          $('#shadow,#addModal').removeClass('hide');
+          $.ajax({
+              url:'/get_all_class/',
+              dataType:'JSON',
+              success:function (arg) {
+{#                  console.log(arg)#}
+                  /*
+                        arg = [
+                            {id:1,title:xx}
+                            {id:1,title:xx}
+                            {id:1,title:xx}
+                        ]
+                        */
+                        //console.log(arg);
+                        // 将所有的数据添加到select,option
+                  $.each(arg,function (i,row) {
+                      var tag = document.createElement('option')
+                      tag.innerHTML = row.title
+                      tag.setAttribute('value',row.id)
+                      $('#classIds').append(tag)
+                  })
+              }
+          })
+      })
+    }
+    
+    function bindAddSubmit() {
+        $('#addSubmit').click(function () {
+            var name = $('#addName').val();
+            var class_id_list = $('#classIds').val();
+            $.ajax({
+                url:'/modal_add_teacher/',
+                type:'POST',
+                dataType:'JSON',
+                data:{'name':name,'class_id_list':class_id_list},
+                traditional:true,
+                success:function (arg) {
+                    if(arg.status){
+                        location.reload();
+                    }else{
+                        alert(arg.message);
+                    }
+                }
+            })
+        })
+    }
+
+
+</script>
+
+</body>
+</html>
