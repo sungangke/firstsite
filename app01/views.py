@@ -2,8 +2,23 @@
 import pymysql
 from django.shortcuts import render,redirect,HttpResponse
 import json
+#装饰器
+def auth(func):
+    def wrapper(request,*args,**kwargs):
+        tk = request.COOKIES.get('ticket')
+        if not tk:
+            return redirect('/login/')
+        ret = func(request,*args,**kwargs)
+        return ret
+    return wrapper
 
+#配置登陆装饰器
+@auth
 def classes(request):
+    #login 那里设置的cookie 跳转
+    # tk = request.COOKIES.get('ticket')
+    # if not tk:
+    #     return  redirect('/login/')
     conn = pymysql.connect(host='localhost',port=3306,user='kk',passwd='123',db='webdb',charset='utf8')
     course=conn.cursor(cursor=pymysql.cursors.DictCursor)
     course.execute("select id,title from class")
@@ -250,3 +265,17 @@ def modal_add_teacher(request):
 #########################后台管理
 def layout(request):
     return render(request,'houtaiguanli/layout.html')
+
+###登陆窗口
+def login(request):
+    if request.method == "GET":
+        return render(request,'houtaiguanli/login.html')
+    else:
+        user = request.POST.get('username')
+        pwd = request.POST.get('password')
+        if user == 'ke' and pwd == '123':
+            obj = redirect('/classes/')
+            obj.set_cookie('ticket','dafadfafaf')
+            return obj
+        else:
+            return render(request,'houtaiguanli/login.html')

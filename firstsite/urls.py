@@ -66,4 +66,6 @@ urlpatterns = [
     url(r'^get_all_class/', views.get_all_class),
     url(r'^modal_add_teacher/', views.modal_add_teacher),
     url(r'^layout/', views.layout),
+    ####
+    url(r'^login/', views.login),
 ]

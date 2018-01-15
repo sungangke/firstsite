@@ -5,89 +5,18 @@
     <title>后台管理layout</title>
     <link rel="stylesheet" href="/static/bootstrap-3.3.7-dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="/static/font-awesome/css/font-awesome.css">
+    <link rel="stylesheet" href="/static/coustomcss/commons.css">
+    {% block css_content %}
+
+    {% endblock %}
 </head>
-<style>
-    body{
-        margin: 0;
-    }
-    .fright{
-        float: right;
-    }
-    .fleft{
-        float: left;
-    }
-    .pg-header{
-        height: 48px;
-        min-width: 1190px;
-        background-color: #204d74;
-        line-height: 48px;
-    }
-    .pg-body .pg-menu{
-        position: absolute;
-        top: 48px;
-        width: 200px;
-        left: 0;
-        bottom: 0;
-        background-color: #dddddd;
-    }
-    .pg-body .pg-content{
-        position: absolute;
-        right:0;
-        left: 200px;
-        top: 48px;
-        bottom:0;
-        min-width: 990px;
-        overflow: scroll;
-        z-index: 99;
-    }
-    .pg-header .logo{
-        color: white;
-        font-size: 18px;
-        width: 200px;
-        text-align: center;
-        border-right: 1px solid gray;
-    }
-    .pg-header .rmenus a{
-        color: white;
-        padding: 0 15px;
-        display: inline-block;
-{#        margin-right: 40px;#}
-    }
-    .pg-header .rmenus a:hover{
-        background-color: #269abc;
-    }
-    .pg-header .rmenus i{
-        padding: 0 5px;
-    }
-    .pg-header .avatar{
-        padding: 0 10px;
-    }
-    .pg-header .avatar img{
-        border-radius: 50%;
-    }
-    .pg-header .avatar .user-info{
-        width: 100px;
-        height: 80px;
-        background-color: #28a4c9;
-        top:46px;
-        right: 20px;
-        position: absolute;
-        z-index: 100;
-        display: none;
-    }
-    .pg-header .avatar:hover .user-info{
-        display: block;
-    }
-    .pg-header .avatar .user-info a{
-        display: block;
-{#        padding: 5px;#}
-    }
-</style>
+
 <body>
 
 <div class="pg-header">
     <div class="logo fleft">老K后台管理</div>
     <div class="fright avatar">
+        <i class="fa fa-user-o" aria-hidden="true" style="color: white"></i>
         <img style="width: 40px;height: 40px;position: relative" src="/static/images/1.jpg" alt="头像">
         <div class="user-info fright">
             <a>个人信息</a>
@@ -101,10 +30,25 @@
     </div>
 </div>
 <div class="pg-body">
-    <div class="pg-menu">菜单</div>
-    <div class="pg-content">内容</div>
+    <div class="pg-menu">
+        <a><i class="fa fa-hand-o-right" aria-hidden="true"></i>班级管理</a>
+        <a><i class="fa fa-hand-o-right" aria-hidden="true"></i>学生管理</a>
+        <a><i class="fa fa-hand-o-right" aria-hidden="true"></i>老师管理</a>
+    </div>
+    <div class="pg-content">
+        <ol class="breadcrumb">
+          <li><a href="#">首页</a></li>
+          <li><a href="#">班级管理</a></li>
+          <li class="active">添加班级</li>
+        </ol>
+        {% block xxcontent %}
+        
+        {% endblock %}
+    </div>
 </div>
 
+        {% block js_content %}
 
+        {% endblock %}
 </body>
 </html>

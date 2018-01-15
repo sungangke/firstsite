@@ -1,7 +1,9 @@
-{% extends 'houtaiguanli/layout.html' %}
-
-{% block css_content %}
-     <style>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
         .shadow {
             position: fixed;
             left: 0;
@@ -13,7 +15,7 @@
             z-index: 101;
         }
 
-        .modal1 {
+        .modal {
             position: fixed;
             width: 400px;
             height: 200px;
@@ -29,15 +31,14 @@
             display: none;
         }
     </style>
-{% endblock %}
-
-
-{% block xxcontent %}
-    <hr>
-<a href="/add_student/"  class="btn btn-primary">添加学生</a>
-<a id="dhkstu"  class="btn btn-primary">对话框添加学生</a>
+</head>
+<body>
+<h1>学生列表</h1>
+<hr>
+<a href="/add_student/">添加学生</a>
+<a id="dhkstu">对话框添加学生</a>
 <div id="shadow" class="shadow hide"></div>
-<div id="modal1" class="modal1 hide">
+<div id="modal" class="modal hide">
     <p><input type="text" placeholder="学生姓名" id="stu_name"></p>
     <p>
         {#            <input type="text" name="cls" placeholder="班级名称" >#}
@@ -53,7 +54,7 @@
     <input type="button" value="取消" id="qxId">
     <span id="addError" style="color: red;"></span>
 </div>
-<div id="editModal" class="modal1 hide">
+<div id="editModal" class="modal hide">
     <h3>编辑学生</h3>
     <p><input type="text" placeholder="学生姓名" id="editName">
         <input type="text" id="editId" style="display:none;">
@@ -72,7 +73,7 @@
     <input type="button" value="取消" id="editqxId">
     <span id="editError" style="color: red;"></span>
 </div>
-<table border="1px soild red" class="table table-hover table-bordered">
+<table border="1px soild red">
     <thead>
     <tr>
         <th>ID</th>
@@ -95,18 +96,11 @@
 
     </tbody>
 </table>
-{% endblock %}
-
-{% block js_content %}
-    <script src="/static/jquery-3.2.1.min.js"></script>
+<script src="/static/jquery-3.2.1.min.js"></script>
 <script>
     $(function () {
         $('#dhkstu').click(function () {
-            $('.shadow, #editModal').removeClass('hide');
-        });
-
-        $('#editqxId').click(function () {
-            $('.shadow, #editModal').addClass('hide');
+            $('.shadow, .modal').removeClass('hide');
         });
 
         $('#tjId').click(function () {
@@ -173,4 +167,6 @@
     {#        })#}
 </script>
 
-{% endblock %}
+
+</body>
+</html>
